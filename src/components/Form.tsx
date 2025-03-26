@@ -10,6 +10,9 @@ import InfoIcon from "./InfoIcon";
 import ExclamationIcon from "./ExclamationIcon.tsx";
 import { formatDate } from "./helpers";
 
+const apiUrl = import.meta.env.VITE_API_URL;
+const apiKey = import.meta.env.VITE_API_KEY;
+
 const emailTest = (value: string) => !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value);
 
 type FormState = {
@@ -94,12 +97,18 @@ const Form = () => {
   useEffect(() => {
     const fetchHolidays = async () => {
       try {
-        const result = await axios.get("/api/holidays?country=PL");
+        const result = await axios.get(apiUrl, {
+          params: { country: "PL" },
+          headers: {
+            "X-Api-Key": apiKey,
+          },
+        });
         setHolidays(result.data);
       } catch (err) {
         console.error((err as Error).message);
       }
     };
+
     fetchHolidays();
   }, []);
 
